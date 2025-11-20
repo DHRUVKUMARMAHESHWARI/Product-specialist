@@ -83,13 +83,13 @@ export const KnowledgeHub: React.FC = () => {
 
   const renderMarkdown = (text: string) => {
     return text.split('\n').map((line, i) => {
-      if (line.startsWith('## ')) return <h3 key={i} className="text-2xl font-black mt-8 mb-4 uppercase tracking-tight">{line.replace('## ', '')}</h3>;
-      if (line.startsWith('# ')) return <h2 key={i} className="text-4xl font-black mt-10 mb-6 uppercase bg-yellow-300 inline-block px-2 transform -rotate-1">{line.replace('# ', '')}</h2>;
-      if (line.startsWith('**')) return <p key={i} className="font-bold mb-2 text-lg">{line.replace(/\*\*/g, '')}</p>; 
+      if (line.startsWith('## ')) return <h3 key={i} className="text-xl md:text-2xl font-black mt-8 mb-4 uppercase tracking-tight">{line.replace('## ', '')}</h3>;
+      if (line.startsWith('# ')) return <h2 key={i} className="text-3xl md:text-4xl font-black mt-10 mb-6 uppercase bg-yellow-300 inline-block px-2 transform -rotate-1">{line.replace('# ', '')}</h2>;
+      if (line.startsWith('**')) return <p key={i} className="font-bold mb-2 text-base md:text-lg">{line.replace(/\*\*/g, '')}</p>; 
       if (line.startsWith('- ')) return <li key={i} className="ml-6 mb-2 list-disc pl-2">{line.replace('- ', '')}</li>;
       if (line.match(/^\d\./)) return <li key={i} className="ml-6 mb-2 list-decimal pl-2 font-bold">{line.replace(/^\d\.\s/, '')}</li>;
       if (line.trim() === '') return <br key={i} />;
-      return <p key={i} className="mb-4 leading-relaxed text-gray-800 text-lg font-medium">{line.replace(/\*\*/g, '')}</p>;
+      return <p key={i} className="mb-4 leading-relaxed text-gray-800 text-base md:text-lg font-medium">{line.replace(/\*\*/g, '')}</p>;
     });
   };
 
@@ -98,7 +98,7 @@ export const KnowledgeHub: React.FC = () => {
 
     return (
       <div className="max-w-6xl mx-auto animate-fade-in pb-20">
-        <div className="flex justify-between items-center mb-6 sticky top-20 md:top-4 z-30 bg-[#f3f4f6]/90 backdrop-blur-sm py-4 border-b-2 border-black/10">
+        <div className="flex justify-between items-center mb-6 sticky top-16 md:top-4 z-30 bg-[#f3f4f6]/90 backdrop-blur-sm py-4 border-b-2 border-black/10">
              <Button variant="outline" onClick={() => setSelectedResource(null)} className="flex items-center gap-2 text-xs">
                 <ArrowLeft size={14} /> RETURN TO BASE
             </Button>
@@ -109,40 +109,40 @@ export const KnowledgeHub: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div className="lg:col-span-8">
-                <article className="bg-white border-2 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden relative">
-                    <header className="bg-black text-white p-8 md:p-12 relative overflow-hidden">
+            <div className="order-2 lg:order-1 lg:col-span-8">
+                <article className="bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] md:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden relative">
+                    <header className="bg-black text-white p-6 md:p-12 relative overflow-hidden">
                         <div className="absolute top-0 right-0 p-4 opacity-20">
-                            <BookOpen size={120} />
+                            <BookOpen size={80} className="md:w-32 md:h-32" />
                         </div>
                         <div className="relative z-10">
                             <div className="flex flex-wrap gap-2 mb-6">
-                                <span className="bg-[#2563eb] text-white px-2 py-1 text-xs font-bold uppercase border border-white">{selectedResource.category}</span>
-                                <span className="bg-transparent border border-white text-white px-2 py-1 text-xs font-bold uppercase">{selectedResource.duration}</span>
+                                <span className="bg-[#2563eb] text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase border border-white">{selectedResource.category}</span>
+                                <span className="bg-transparent border border-white text-white px-2 py-1 text-[10px] md:text-xs font-bold uppercase">{selectedResource.duration}</span>
                             </div>
-                            <h1 className="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4 leading-[0.9]">
+                            <h1 className="text-3xl md:text-6xl font-black uppercase tracking-tighter mb-4 leading-[0.9] break-words">
                                 {selectedResource.title}
                             </h1>
-                            <p className="text-lg text-gray-300 font-medium max-w-2xl font-mono border-l-2 border-[#2563eb] pl-4">
+                            <p className="text-base md:text-lg text-gray-300 font-medium max-w-2xl font-mono border-l-2 border-[#2563eb] pl-4">
                                 {selectedResource.description}
                             </p>
                         </div>
                     </header>
 
-                    <div className="p-8 md:p-12 bg-white min-h-[400px]" ref={contentRef}>
+                    <div className="p-6 md:p-12 bg-white min-h-[300px] md:min-h-[400px]" ref={contentRef}>
                         {displayContent ? (
-                        <div className="prose prose-xl max-w-none font-sans">
+                        <div className="prose prose-lg max-w-none font-sans">
                             {renderMarkdown(displayContent)}
                         </div>
                         ) : (
-                        <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 border-4 border-dashed border-gray-200 bg-gray-50 m-4 p-8">
+                        <div className="flex flex-col items-center justify-center py-12 text-center space-y-6 border-4 border-dashed border-gray-200 bg-gray-50 m-2 md:m-4 p-4 md:p-8">
                             <div className="bg-white p-4 rounded-full border-2 border-black shadow-md">
-                                <Sparkles size={48} className="text-yellow-400" />
+                                <Sparkles size={32} className="text-yellow-400 md:w-12 md:h-12" />
                             </div>
                             <div className="max-w-md">
-                                <h3 className="text-2xl font-black uppercase mb-2">Initialize Knowledge Download</h3>
-                                <p className="text-gray-600 mb-6 font-medium">This module needs to be compiled by the ProductSense Engine.</p>
-                                <Button onClick={handleGenerateExistingContent} disabled={isLoading} className="w-full text-lg py-4">
+                                <h3 className="text-xl md:text-2xl font-black uppercase mb-2">Initialize Knowledge Download</h3>
+                                <p className="text-gray-600 mb-6 font-medium text-sm md:text-base">This module needs to be compiled by the ProductSense Engine.</p>
+                                <Button onClick={handleGenerateExistingContent} disabled={isLoading} className="w-full text-base md:text-lg py-4">
                                     {isLoading ? (
                                     <span className="flex items-center justify-center gap-2"><Loader className="animate-spin" /> COMPILING DATA...</span>
                                     ) : (
@@ -154,15 +154,15 @@ export const KnowledgeHub: React.FC = () => {
                         )}
                     </div>
 
-                    <div className="bg-gray-100 border-t-2 border-black p-6 flex justify-between items-center">
-                        <div className="text-xs font-bold uppercase text-gray-500">End of File</div>
-                        <Button variant="secondary" onClick={() => setSelectedResource(null)}>MARK COMPLETE (+50 XP)</Button>
+                    <div className="bg-gray-100 border-t-2 border-black p-4 md:p-6 flex justify-between items-center">
+                        <div className="text-[10px] md:text-xs font-bold uppercase text-gray-500">End of File</div>
+                        <Button variant="secondary" onClick={() => setSelectedResource(null)} className="text-xs md:text-sm">MARK COMPLETE (+50 XP)</Button>
                     </div>
                 </article>
             </div>
 
-            <div className="lg:col-span-4 space-y-6">
-                <Card title="Intel Extraction" className="sticky top-24 bg-[#fefce8]">
+            <div className="order-1 lg:order-2 lg:col-span-4 space-y-6">
+                <Card title="Intel Extraction" className="lg:sticky lg:top-24 bg-[#fefce8]">
                     <p className="text-xs font-bold text-gray-500 mb-4 uppercase">Active Analysis Tools</p>
                     <div className="grid grid-cols-1 gap-3 mb-6">
                         <button 
@@ -235,10 +235,10 @@ export const KnowledgeHub: React.FC = () => {
       <div className="bg-black text-white p-8 md:p-12 border-b-4 border-[#2563eb] shadow-[8px_8px_0px_0px_rgba(37,99,235,1)]">
          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
             <div>
-                <h2 className="text-5xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-4">
+                <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter leading-none mb-4">
                     Knowledge<br/>Protocol
                 </h2>
-                <p className="text-xl text-gray-300 max-w-lg border-l-2 border-white pl-4">
+                <p className="text-lg md:text-xl text-gray-300 max-w-lg border-l-2 border-white pl-4">
                     Access the central database of Product Management wisdom. 
                     <span className="text-[#2563eb] font-bold block mt-1">Prepare for everything.</span>
                 </p>
@@ -256,7 +256,7 @@ export const KnowledgeHub: React.FC = () => {
                   <input 
                     type="text" 
                     placeholder="Search database or type a new topic to generate..." 
-                    className="w-full pl-12 pr-4 py-4 bg-gray-50 border-2 border-gray-200 focus:border-black focus:ring-0 font-bold text-lg transition-colors"
+                    className="w-full pl-12 pr-4 py-3 md:py-4 bg-gray-50 border-2 border-gray-200 focus:border-black focus:ring-0 font-bold text-base md:text-lg transition-colors"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyDown={(e) => {
@@ -266,12 +266,12 @@ export const KnowledgeHub: React.FC = () => {
                     }}
                   />
               </div>
-              <div className="flex gap-2 overflow-x-auto pb-1 md:pb-0">
+              <div className="flex gap-2 overflow-x-auto pb-1 md:pb-0 no-scrollbar">
                  {['ALL', 'BEGINNER', 'INTERMEDIATE', 'ADVANCED', 'EXPERT'].map((tab) => (
                     <button
                     key={tab}
                     onClick={() => setActiveTab(tab as any)}
-                    className={`px-6 py-2 font-black uppercase text-sm border-2 border-black transition-all whitespace-nowrap flex items-center
+                    className={`px-4 md:px-6 py-2 font-black uppercase text-xs md:text-sm border-2 border-black transition-all whitespace-nowrap flex items-center
                         ${activeTab === tab ? 'bg-[#2563eb] text-white' : 'bg-white hover:bg-gray-100'}
                     `}
                     >
@@ -288,7 +288,7 @@ export const KnowledgeHub: React.FC = () => {
                 <div className="bg-black text-white p-4 rounded-full mb-4 group-hover:scale-110 transition-transform">
                     {isLoading ? <Loader className="animate-spin" /> : <Sparkles size={32} />}
                 </div>
-                <h3 className="text-2xl font-black uppercase mb-2">Generate "{searchQuery}"</h3>
+                <h3 className="text-xl md:text-2xl font-black uppercase mb-2">Generate "{searchQuery}"</h3>
                 <p className="text-sm font-bold text-gray-600 px-8">
                     Topic not found in local database. Click to initialize AI generation sequence.
                 </p>
@@ -310,11 +310,11 @@ export const KnowledgeHub: React.FC = () => {
               </div>
             </div>
             
-            <h3 className="text-2xl font-black uppercase mb-3 leading-tight flex-1 group-hover:text-[#2563eb] transition-colors">
+            <h3 className="text-xl md:text-2xl font-black uppercase mb-3 leading-tight flex-1 group-hover:text-[#2563eb] transition-colors line-clamp-2">
               {resource.title}
             </h3>
             
-            <p className="text-base text-gray-600 mb-6 font-medium line-clamp-3 border-l-2 border-gray-200 pl-3">
+            <p className="text-sm md:text-base text-gray-600 mb-6 font-medium line-clamp-3 border-l-2 border-gray-200 pl-3">
               {resource.description}
             </p>
 
@@ -327,7 +327,7 @@ export const KnowledgeHub: React.FC = () => {
 
         {filteredResources.length === 0 && !searchQuery && (
             <div className="col-span-full text-center py-20 opacity-50">
-                <h3 className="text-2xl font-black uppercase">No Archives Found</h3>
+                <h3 className="text-xl md:text-2xl font-black uppercase">No Archives Found</h3>
                 <p>Adjust filters to locate data.</p>
             </div>
         )}

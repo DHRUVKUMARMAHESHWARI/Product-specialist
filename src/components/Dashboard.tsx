@@ -28,14 +28,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 md:space-y-8 animate-fade-in">
       {/* Header Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card className="col-span-1 md:col-span-2 bg-[#fefce8]">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-4xl font-black uppercase mb-2">Welcome back, {user.name}</h1>
-              <p className="text-lg text-gray-700 font-medium">Today's focus: <span className="bg-yellow-300 px-1 border border-black">User Interviews</span></p>
+              <h1 className="text-3xl md:text-4xl font-black uppercase mb-2 leading-tight">Welcome back, {user.name}</h1>
+              <p className="text-base md:text-lg text-gray-700 font-medium">Today's focus: <span className="bg-yellow-300 px-1 border border-black">User Interviews</span></p>
             </div>
             <div className="hidden md:block text-5xl">🚀</div>
           </div>
@@ -57,40 +57,40 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform">
-          <Trophy className="w-8 h-8 mb-2 text-yellow-500" />
-          <div className="text-2xl font-bold">{user.completedModules.length}</div>
-          <div className="text-xs uppercase font-bold text-gray-500">Modules Mastered</div>
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        <div className="border-2 border-black bg-white p-3 md:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform">
+          <Trophy className="w-6 h-6 md:w-8 md:h-8 mb-2 text-yellow-500" />
+          <div className="text-xl md:text-2xl font-bold">{user.completedModules.length}</div>
+          <div className="text-[10px] md:text-xs uppercase font-bold text-gray-500">Modules Mastered</div>
         </div>
-        <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform">
-          <Brain className="w-8 h-8 mb-2 text-purple-500" />
-          <div className="text-2xl font-bold">84%</div>
-          <div className="text-xs uppercase font-bold text-gray-500">Retention Rate</div>
+        <div className="border-2 border-black bg-white p-3 md:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform">
+          <Brain className="w-6 h-6 md:w-8 md:h-8 mb-2 text-purple-500" />
+          <div className="text-xl md:text-2xl font-bold">84%</div>
+          <div className="text-[10px] md:text-xs uppercase font-bold text-gray-500">Retention Rate</div>
         </div>
-        <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform">
-          <TrendingUp className="w-8 h-8 mb-2 text-green-500" />
-          <div className="text-2xl font-bold">Top 10%</div>
-          <div className="text-xs uppercase font-bold text-gray-500">Among Beginners</div>
+        <div className="border-2 border-black bg-white p-3 md:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform">
+          <TrendingUp className="w-6 h-6 md:w-8 md:h-8 mb-2 text-green-500" />
+          <div className="text-xl md:text-2xl font-bold">Top 10%</div>
+          <div className="text-[10px] md:text-xs uppercase font-bold text-gray-500">Among Beginners</div>
         </div>
-        <div className="border-2 border-black bg-white p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform cursor-pointer" onClick={() => onNavigate('AI_COMPANION')}>
+        <div className="border-2 border-black bg-white p-3 md:p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-y-[-2px] transition-transform cursor-pointer" onClick={() => onNavigate('AI_COMPANION')}>
           <div className="flex justify-between">
-            <Brain className="w-8 h-8 mb-2 text-blue-500" />
+            <Brain className="w-6 h-6 md:w-8 md:h-8 mb-2 text-blue-500" />
             <ArrowRight className="w-4 h-4" />
           </div>
-          <div className="text-lg font-bold leading-tight mt-1">Ask ProductSense</div>
-          <div className="text-xs uppercase font-bold text-gray-500">AI Mentor Ready</div>
+          <div className="text-base md:text-lg font-bold leading-tight mt-1">Ask ProductSense</div>
+          <div className="text-[10px] md:text-xs uppercase font-bold text-gray-500">AI Mentor Ready</div>
         </div>
       </div>
 
       {/* Main Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Charts */}
-        <Card title="Weekly Activity" className="col-span-2 h-80">
+        <Card title="Weekly Activity" className="col-span-1 lg:col-span-2 h-64 md:h-80">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
-              <XAxis dataKey="name" stroke="#000" tick={{fill: '#000', fontSize: 12, fontWeight: 'bold'}} />
-              <YAxis stroke="#000" tick={{fill: '#000', fontSize: 12, fontWeight: 'bold'}} />
+              <XAxis dataKey="name" stroke="#000" tick={{fill: '#000', fontSize: 10, fontWeight: 'bold'}} />
+              <YAxis stroke="#000" tick={{fill: '#000', fontSize: 10, fontWeight: 'bold'}} width={30} />
               <Tooltip 
                 contentStyle={{ border: '2px solid black', boxShadow: '4px 4px 0px 0px black', borderRadius: '0px' }}
                 itemStyle={{ fontWeight: 'bold', color: 'black' }}
@@ -124,7 +124,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onNavigate }) => {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={skillData} layout="vertical">
                  <XAxis type="number" hide />
-                 <YAxis dataKey="name" type="category" width={80} tick={{fill: '#000', fontWeight: 'bold'}} />
+                 <YAxis dataKey="name" type="category" width={80} tick={{fill: '#000', fontWeight: 'bold', fontSize: 12}} />
                  <Tooltip cursor={{fill: '#f3f4f6'}} contentStyle={{ border: '2px solid black' }} />
                  <Bar dataKey="val" fill="#000" barSize={20} radius={[0, 4, 4, 0]} />
               </BarChart>

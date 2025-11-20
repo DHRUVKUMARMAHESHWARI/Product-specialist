@@ -47,7 +47,7 @@ export const Simulator: React.FC = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="md:col-span-2 mb-4">
-            <h2 className="text-3xl font-black uppercase mb-2">Real-World Simulator</h2>
+            <h2 className="text-2xl md:text-3xl font-black uppercase mb-2">Real-World Simulator</h2>
             <p className="text-lg text-gray-600">Practice high-stakes situations safely.</p>
         </div>
         {scenarios.map((s) => (
@@ -73,7 +73,7 @@ export const Simulator: React.FC = () => {
         <Button variant="outline" onClick={reset} className="mb-4">← Back to Scenarios</Button>
         
         <Card title="Evaluation Report" className="border-black">
-            <div className="flex items-center gap-4 mb-6 p-4 bg-gray-50 border-2 border-black">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4 mb-6 p-4 bg-gray-50 border-2 border-black">
                 <div className="text-5xl font-black text-[#2563eb]">{result.score}/100</div>
                 <div>
                     <div className="font-bold uppercase text-sm text-gray-500">Performance Score</div>
@@ -115,7 +115,7 @@ export const Simulator: React.FC = () => {
     <div className="max-w-4xl mx-auto h-full flex flex-col">
       <Button variant="outline" onClick={() => setActiveScenarioId(null)} className="self-start mb-4">← Cancel</Button>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
-        <div className="lg:col-span-1 space-y-6">
+        <div className="order-1 lg:col-span-1 space-y-6">
             <Card title="Mission Briefing" className="bg-gray-50">
                 <div className="mb-4">
                     <div className="text-xs font-bold uppercase text-gray-500 mb-1">Context</div>
@@ -132,7 +132,7 @@ export const Simulator: React.FC = () => {
             </Card>
         </div>
         
-        <div className="lg:col-span-2 flex flex-col h-full">
+        <div className="order-2 lg:col-span-2 flex flex-col h-full min-h-[400px]">
             <Card className="flex-1 flex flex-col" title="Your Response">
                 <textarea 
                     className="flex-1 w-full p-4 border-2 border-gray-300 focus:border-black focus:ring-0 resize-none font-mono text-sm mb-4"
