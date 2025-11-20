@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { Card, Button, Badge } from './ui/BrutalistComponents';
 import { evaluatePracticeExercise, generateResearchHelp } from '../services/gemini';
-import { Target, Zap, FileText, ArrowLeft, PenTool, Crosshair, Layers, Loader, Award, Microscope, FlaskConical, ShieldAlert, CheckCircle, BookOpen, ChevronDown, ChevronUp, Copy, MessageSquare, FileSearch, Play } from 'lucide-react';
+import { Target, Zap, FileText, ArrowLeft, PenTool, Crosshair, Layers, Loader, Award, Microscope, FlaskConical, ShieldAlert, CheckCircle, BookOpen, ChevronDown, ChevronUp, Copy, MessageSquare, FileSearch, Play, ArrowDown } from 'lucide-react';
 
 type DrillType = 'STORY' | 'METRIC' | 'PRD' | 'RESEARCH' | null;
 type ResearchMode = 'DESIGN' | 'SCRIPTING' | 'SYNTHESIS';
@@ -16,7 +17,8 @@ export const PracticeGround: React.FC = () => {
 
   // States for Metric Hunter
   const [metricScenario, setMetricScenario] = useState('');
-  const [metricInput, setMetricInput] = useState('');
+  const [metricPrimary, setMetricPrimary] = useState('');
+  const [metricCounter, setMetricCounter] = useState('');
 
   // States for PRD Architect
   const [prdMode, setPrdMode] = useState<'DRAFT' | 'TEST'>('DRAFT');
@@ -46,7 +48,7 @@ export const PracticeGround: React.FC = () => {
     setEvaluation(null);
     setIsEvaluating(false);
     setStoryPersona(''); setStoryAction(''); setStoryBenefit('');
-    setMetricInput(''); setPrdContent('');
+    setMetricPrimary(''); setMetricCounter(''); setPrdContent('');
     setResearchInput('');
     setShowResearchGuide(false);
     setGeneratedExamples('');
@@ -104,7 +106,7 @@ export const PracticeGround: React.FC = () => {
       input = `As a ${storyPersona}, I want to ${storyAction}, so that ${storyBenefit}.`;
     } else if (activeDrill === 'METRIC') {
       type = 'METRICS';
-      input = metricInput;
+      input = `Primary Metric: ${metricPrimary}\nCounter Metric: ${metricCounter}`;
       context = metricScenario;
     } else if (activeDrill === 'PRD') {
       if (prdMode === 'DRAFT') {
@@ -392,19 +394,51 @@ export const PracticeGround: React.FC = () => {
 
                         {/* 2. METRIC FORM */}
                         {activeDrill === 'METRIC' && (
-                            <div className="space-y-4">
-                                <div className="bg-yellow-50 border-2 border-black p-4 mb-6">
-                                    <div className="text-xs font-black uppercase text-yellow-600 mb-1">Scenario</div>
-                                    <p className="font-bold text-lg">{metricScenario}</p>
+                            <div className="space-y-6 animate-fade-in">
+                                <div className="bg-yellow-50 border-2 border-black p-4 mb-2 relative">
+                                     <div className="absolute -top-3 -left-2 bg-black text-white px-2 py-1 text-[10px] font-bold uppercase transform -rotate-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
+                                        Mission Context
+                                    </div>
+                                    <h5 className="font-bold text-lg mt-2">{metricScenario}</h5>
                                 </div>
-                                <div>
-                                    <label className="block text-xs font-bold uppercase mb-1">Primary & Counter Metrics</label>
-                                    <textarea 
-                                        className="w-full border-2 border-black p-3 font-medium focus:ring-4 focus:ring-red-200 focus:outline-none h-32 resize-none text-sm"
-                                        placeholder="Primary Metric: ...&#10;Counter Metric: ..."
-                                        value={metricInput}
-                                        onChange={(e) => setMetricInput(e.target.value)}
-                                    />
+
+                                {/* Primary Metric Input */}
+                                <div className="relative">
+                                     <label className="block text-xs font-bold uppercase mb-2 flex items-center gap-2 text-green-700">
+                                        <Target size={16} /> North Star Metric (Primary)
+                                     </label>
+                                     <div className="bg-green-50 p-3 border-l-4 border-green-500 mb-2 text-xs text-green-900 leading-snug">
+                                        <strong>Guidance:</strong> What one number tells you the user is getting value? Don't choose a vanity metric like "Total Signups".
+                                     </div>
+                                     <input 
+                                        className="w-full border-2 border-black p-4 font-bold focus:ring-4 focus:ring-green-200 focus:outline-none text-sm"
+                                        placeholder="e.g. Time spent listening (Spotify) vs App Opens"
+                                        value={metricPrimary}
+                                        onChange={(e) => setMetricPrimary(e.target.value)}
+                                     />
+                                </div>
+
+                                {/* Connecting Arrow */}
+                                <div className="flex justify-center -my-2">
+                                    <div className="bg-gray-100 p-1 rounded-full border border-gray-300 z-10">
+                                        <ArrowDown size={16} className="text-gray-400" />
+                                    </div>
+                                </div>
+
+                                {/* Counter Metric Input */}
+                                <div className="relative">
+                                     <label className="block text-xs font-bold uppercase mb-2 flex items-center gap-2 text-red-700">
+                                        <ShieldAlert size={16} /> Counter Metric (The Check)
+                                     </label>
+                                     <div className="bg-red-50 p-3 border-l-4 border-red-500 mb-2 text-xs text-red-900 leading-snug">
+                                        <strong>Guidance:</strong> If you optimize the North Star too hard, what breaks? What negative behavior are you guarding against?
+                                     </div>
+                                     <input 
+                                        className="w-full border-2 border-black p-4 font-bold focus:ring-4 focus:ring-red-200 focus:outline-none text-sm"
+                                        placeholder="e.g. Uninstalls, Latency, or Support Tickets"
+                                        value={metricCounter}
+                                        onChange={(e) => setMetricCounter(e.target.value)}
+                                     />
                                 </div>
                             </div>
                         )}
@@ -632,7 +666,7 @@ export const PracticeGround: React.FC = () => {
 
                         <Button 
                             onClick={handleEvaluate} 
-                            disabled={isEvaluating || (activeDrill === 'STORY' && (!storyPersona || !storyAction || !storyBenefit)) || (activeDrill === 'METRIC' && !metricInput) || (activeDrill === 'PRD' && !prdContent) || (activeDrill === 'RESEARCH' && !researchInput)}
+                            disabled={isEvaluating || (activeDrill === 'STORY' && (!storyPersona || !storyAction || !storyBenefit)) || (activeDrill === 'METRIC' && (!metricPrimary || !metricCounter)) || (activeDrill === 'PRD' && !prdContent) || (activeDrill === 'RESEARCH' && !researchInput)}
                             className={`w-full py-4 text-lg border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] ${activeDrill === 'PRD' && prdMode === 'TEST' ? 'bg-red-600 hover:bg-red-700 text-white' : ''}`}
                         >
                             {isEvaluating ? (
