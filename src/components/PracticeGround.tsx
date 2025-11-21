@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
 import { Card, Button, Badge } from './ui/BrutalistComponents';
 import { evaluatePracticeExercise, generateResearchHelp } from '../services/gemini';
-import { Target, Zap, FileText, ArrowLeft, PenTool, Crosshair, Layers, Loader, Award, Microscope, FlaskConical, ShieldAlert, CheckCircle, BookOpen, ChevronDown, ChevronUp, Copy, MessageSquare, FileSearch, Play, ArrowDown } from 'lucide-react';
+import { Target, Zap, FileText, ArrowLeft, PenTool, Crosshair, Layers, Loader, Award, Microscope, FlaskConical, ShieldAlert, CheckCircle, BookOpen, ChevronDown, ChevronUp, Copy, MessageSquare, FileSearch, Play, ArrowDown, Ban } from 'lucide-react';
 
 type DrillType = 'STORY' | 'METRIC' | 'PRD' | 'RESEARCH' | null;
-type ResearchMode = 'DESIGN' | 'SCRIPTING' | 'SYNTHESIS';
+type ResearchMode = 'DESIGN' | 'SCRIPTING' | 'BIAS' | 'SYNTHESIS';
 
 export const PracticeGround: React.FC = () => {
   const [activeDrill, setActiveDrill] = useState<DrillType>(null);
@@ -36,6 +35,7 @@ export const PracticeGround: React.FC = () => {
   // New Research Lab States
   const [scriptScenario, setScriptScenario] = useState('');
   const [synthesisData, setSynthesisData] = useState('');
+  const [biasChallenge, setBiasChallenge] = useState('');
   const [generatedExamples, setGeneratedExamples] = useState<string>('');
   const [loadingGen, setLoadingGen] = useState(false);
 
@@ -54,6 +54,7 @@ export const PracticeGround: React.FC = () => {
     setGeneratedExamples('');
     setScriptScenario('');
     setSynthesisData('');
+    setBiasChallenge('');
   };
 
   const startMetricDrill = () => {
@@ -77,12 +78,26 @@ export const PracticeGround: React.FC = () => {
     setResearchMystery(mysteries[Math.floor(Math.random() * mysteries.length)]);
     setResearchMode('DESIGN');
     setActiveDrill('RESEARCH');
-  }
+  };
+
+  const startBiasDrill = () => {
+    const badQuestions = [
+        "How much do you love our new feature?",
+        "Did you find the checkout process easy to use?",
+        "Would you pay $10 for this product?",
+        "Do you think this design is cleaner than the old one?",
+        "You don't have any problems with the navigation, do you?"
+    ];
+    setBiasChallenge(badQuestions[Math.floor(Math.random() * badQuestions.length)]);
+    setResearchMode('BIAS');
+    setResearchInput('');
+    setEvaluation(null);
+  };
 
   const generateResearchContent = async (type: 'EXAMPLES' | 'TRANSCRIPT' | 'SCENARIO') => {
       setLoadingGen(true);
       let context = "";
-      if (type === 'EXAMPLES') context = researchMethod;
+      if (type === 'EXAMPLES') context = researchMethod; // Pass the selected method
       if (type === 'TRANSCRIPT') context = "a user trying to book a flight but finding the filters confusing";
       if (type === 'SCENARIO') context = "User Research";
 
@@ -97,7 +112,7 @@ export const PracticeGround: React.FC = () => {
 
   const handleEvaluate = async () => {
     setIsEvaluating(true);
-    let type: 'USER_STORY' | 'PRD_SECTION' | 'METRICS' | 'RESEARCH_PLAN' | 'PRD_ANALYSIS' | 'RESEARCH_SCRIPT' | 'RESEARCH_SYNTHESIS' = 'USER_STORY';
+    let type: 'USER_STORY' | 'PRD_SECTION' | 'METRICS' | 'RESEARCH_PLAN' | 'PRD_ANALYSIS' | 'RESEARCH_SCRIPT' | 'RESEARCH_SYNTHESIS' | 'RESEARCH_BIAS' = 'USER_STORY';
     let input = '';
     let context = '';
 
@@ -131,6 +146,10 @@ export const PracticeGround: React.FC = () => {
           type = 'RESEARCH_SYNTHESIS';
           input = researchInput;
           context = synthesisData;
+      } else if (researchMode === 'BIAS') {
+          type = 'RESEARCH_BIAS';
+          input = researchInput;
+          context = biasChallenge; // The original biased question
       }
     }
 
@@ -235,7 +254,7 @@ export const PracticeGround: React.FC = () => {
                     </div>
                     <h3 className="text-2xl font-black uppercase mb-2 z-10 relative">Research Lab</h3>
                     <p className="text-gray-600 font-medium mb-6 flex-1 text-sm z-10 relative">
-                        Design studies, script interviews, and synthesize insights from raw data.
+                        Design studies, fix biased questions, and synthesize insights.
                     </p>
                     <div className="text-[10px] font-bold uppercase border-t-2 border-gray-100 pt-4 text-gray-400 z-10 relative">
                         Discovery • Hard
@@ -296,6 +315,7 @@ export const PracticeGround: React.FC = () => {
                                 <div className="flex gap-2 flex-wrap self-start md:self-auto">
                                     <button onClick={() => {setResearchMode('DESIGN'); setEvaluation(null);}} className={`px-2 py-1 text-[10px] font-bold uppercase border border-black transition-all ${researchMode === 'DESIGN' ? 'bg-black text-white' : 'bg-white'}`}>Design</button>
                                     <button onClick={() => {setResearchMode('SCRIPTING'); setEvaluation(null);}} className={`px-2 py-1 text-[10px] font-bold uppercase border border-black transition-all ${researchMode === 'SCRIPTING' ? 'bg-black text-white' : 'bg-white'}`}>Script</button>
+                                    <button onClick={() => {startBiasDrill(); setEvaluation(null);}} className={`px-2 py-1 text-[10px] font-bold uppercase border border-black transition-all ${researchMode === 'BIAS' ? 'bg-red-600 text-white' : 'bg-white hover:bg-red-50 text-red-600'}`}>Bias Breaker</button>
                                     <button onClick={() => {setResearchMode('SYNTHESIS'); setEvaluation(null);}} className={`px-2 py-1 text-[10px] font-bold uppercase border border-black transition-all ${researchMode === 'SYNTHESIS' ? 'bg-black text-white' : 'bg-white'}`}>Synthesis</button>
                                 </div>
                             )}
@@ -307,6 +327,7 @@ export const PracticeGround: React.FC = () => {
                             {activeDrill === 'RESEARCH' && (
                                 researchMode === 'DESIGN' ? "Plan the study methodology for the mystery." :
                                 researchMode === 'SCRIPTING' ? "Write unbiased questions to avoid leading the witness." :
+                                researchMode === 'BIAS' ? "Rewrite the biased question to be neutral." :
                                 "Extract the golden insight from the raw transcript."
                             )}
                         </p>
@@ -448,21 +469,21 @@ export const PracticeGround: React.FC = () => {
                             <div className="space-y-4">
                                 {/* LAB NAV GUIDE */}
                                 <div className="bg-black text-white p-4 mb-4">
-                                     <h4 className="font-black uppercase text-lg flex items-center gap-2">
-                                        <BookOpen size={20} /> Methodology & Tooling
-                                     </h4>
-                                     <div className="text-sm text-gray-300 mb-3">Understand the tools before you use them.</div>
+                                     <div className="flex justify-between items-center">
+                                        <h4 className="font-black uppercase text-lg flex items-center gap-2">
+                                            <BookOpen size={20} /> Methodology Guide
+                                        </h4>
+                                        <button 
+                                            onClick={() => setShowResearchGuide(!showResearchGuide)} 
+                                            className="text-xs font-bold uppercase flex items-center gap-1 hover:text-gray-300"
+                                        >
+                                            {showResearchGuide ? 'Close' : 'Open'}
+                                            {showResearchGuide ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
+                                        </button>
+                                     </div>
                                      
-                                     <button 
-                                        onClick={() => setShowResearchGuide(!showResearchGuide)} 
-                                        className="w-full bg-white text-black font-bold uppercase text-xs py-2 flex items-center justify-center gap-2 hover:bg-gray-200 transition-colors"
-                                     >
-                                        {showResearchGuide ? 'Close Guide' : 'Open Guide'}
-                                        {showResearchGuide ? <ChevronUp size={14}/> : <ChevronDown size={14}/>}
-                                     </button>
-
                                      {showResearchGuide && (
-                                         <div className="mt-4 space-y-4 animate-fade-in">
+                                         <div className="mt-4 space-y-4 animate-fade-in border-t border-gray-800 pt-4">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                 <div className="bg-gray-900 p-3 border border-gray-700">
                                                     <strong className="text-green-400 block mb-1 uppercase text-xs">Qualitative (The Why)</strong>
@@ -475,18 +496,22 @@ export const PracticeGround: React.FC = () => {
                                             </div>
                                             
                                             <div className="border-t border-gray-700 pt-4">
-                                                <div className="flex justify-between items-center mb-2">
-                                                    <strong className="text-yellow-300 text-xs uppercase">Example Questions Generator</strong>
-                                                    <Button onClick={() => generateResearchContent('EXAMPLES')} disabled={loadingGen} className="py-1 px-2 text-[10px] h-auto">
-                                                        {loadingGen ? <Loader size={10} className="animate-spin"/> : "Generate for Active Method"}
+                                                <div className="flex justify-between items-center mb-2 flex-wrap gap-2">
+                                                    <strong className="text-yellow-300 text-xs uppercase flex items-center gap-2">
+                                                        <Zap size={12} />
+                                                        AI Generator: {researchMethod} Examples
+                                                    </strong>
+                                                    <Button onClick={() => generateResearchContent('EXAMPLES')} disabled={loadingGen} className="py-1 px-3 text-[10px] h-auto bg-white text-black hover:bg-gray-200 border-none">
+                                                        {loadingGen ? <Loader size={12} className="animate-spin"/> : "Generate Example Questions"}
                                                     </Button>
                                                 </div>
-                                                {generatedExamples && (
-                                                    <div className="bg-gray-800 p-3 text-xs text-gray-300 whitespace-pre-wrap font-mono border border-gray-600">
+                                                {generatedExamples ? (
+                                                    <div className="bg-gray-800 p-3 text-xs text-gray-300 whitespace-pre-wrap font-mono border border-gray-600 mt-2">
                                                         {generatedExamples}
                                                     </div>
+                                                ) : (
+                                                    <p className="text-[10px] text-gray-500 italic">Click generate to see high-quality example questions for {researchMethod}.</p>
                                                 )}
-                                                {!generatedExamples && <p className="text-[10px] text-gray-500 italic">Select a method in Design mode and click generate to see good vs bad examples.</p>}
                                             </div>
                                          </div>
                                      )}
@@ -558,7 +583,47 @@ export const PracticeGround: React.FC = () => {
                                     </div>
                                 )}
 
-                                {/* --- MODE 3: INSIGHT MINER --- */}
+                                {/* --- MODE 3: BIAS BREAKER (NEW) --- */}
+                                {researchMode === 'BIAS' && (
+                                    <div className="animate-fade-in">
+                                        <div className="bg-red-50 border-2 border-red-200 p-6 mb-6 relative shadow-[4px_4px_0px_0px_rgba(220,38,38,0.1)]">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <Ban className="text-red-600" size={20} />
+                                                <div className="text-xs font-black uppercase text-red-800">Bad Research Question</div>
+                                            </div>
+                                            
+                                            {biasChallenge ? (
+                                                <p className="font-black text-xl md:text-2xl text-gray-900">"{biasChallenge}"</p>
+                                            ) : (
+                                                <div className="text-center py-4">
+                                                    <Button onClick={startBiasDrill} variant="danger">
+                                                        Load New Challenge
+                                                    </Button>
+                                                </div>
+                                            )}
+                                            
+                                            <div className="absolute top-4 right-4">
+                                                <Button onClick={startBiasDrill} className="p-2 h-auto text-[10px]" variant="outline">Next</Button>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="block text-xs font-bold uppercase mb-1 text-red-800">Your Neutral Rewrite</label>
+                                            <div className="bg-gray-100 p-2 text-[10px] mb-2 text-gray-500">
+                                                Goal: Remove the bias. Make it open-ended. Don't lead the user.
+                                            </div>
+                                            <textarea 
+                                                className="w-full border-2 border-black p-4 font-bold focus:ring-4 focus:ring-red-200 focus:outline-none h-32 resize-none text-sm"
+                                                placeholder="Rewrite the question above..."
+                                                value={researchInput}
+                                                onChange={(e) => setResearchInput(e.target.value)}
+                                                disabled={!biasChallenge}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* --- MODE 4: INSIGHT MINER --- */}
                                 {researchMode === 'SYNTHESIS' && (
                                     <div className="animate-fade-in">
                                         <div className="bg-yellow-50 border-2 border-black p-4 mb-6">
@@ -744,7 +809,7 @@ export const PracticeGround: React.FC = () => {
                                 <strong className="block uppercase text-xs text-green-800 mb-1">Quantitative</strong>
                                 Surveys, Analytics, A/B Tests. Good for validating scale and patterns.
                             </div>
-                            <div className="bg-white p-3 border-2 border-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
+                             <div className="bg-white p-3 border-2 border-black text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
                                 <strong>Bias Alert:</strong> Never ask "Would you use this?". Ask "When was the last time you tried to solve this problem?"
                             </div>
                         </div>

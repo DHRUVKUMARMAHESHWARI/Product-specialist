@@ -21,6 +21,7 @@ const ModuleSchema = new mongoose.Schema({
   description: String,
   difficulty: String,
   category: String,
+  track: { type: String, default: 'GENERAL' }, // 'DISCOVERY', 'DELIVERY', 'STRATEGY'
   duration: String,
   locked: { type: Boolean, default: true }
 });
